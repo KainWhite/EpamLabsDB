@@ -19,7 +19,7 @@ begin
 	alter table dbo.StateProvince add SalesPercent as SumSales / SalesYTD * 100;
 end
 go
-
+select * from dbo.StateProvince;
 
 --b)
 if object_id('tempdb..#StateProvince') is not null drop table #StateProvince;
@@ -35,6 +35,7 @@ create table #StateProvince (
 	[SalesYTD] [money],
 	[SumSales] [money],
 	PRIMARY KEY ([StateProvinceID]));
+select * from #StateProvince;
 
 --c)
 insert into #StateProvince
@@ -53,9 +54,11 @@ from dbo.StateProvince d
 		on d.TerritoryID = st.TerritoryID
 	join (select sum(SalesYTD) as SumSales, TerritoryID from Sales.SalesPerson group by TerritoryID) sp
 		on st.TerritoryID = sp.TerritoryID;
+select * from #StateProvince;
 
 --d)
 delete from dbo.StateProvince where StateProvinceID = 5;
+select * from dbo.StateProvince;
 
 --e)
 set identity_insert dbo.StateProvince on;

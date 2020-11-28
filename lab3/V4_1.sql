@@ -10,6 +10,7 @@ begin
 	alter table [dbo].[StateProvince] add [CountryRegionName] nvarchar(50);
 end
 go
+select * from [dbo].[StateProvince];
 
 --b)
 declare @stateProvince table (
@@ -32,14 +33,17 @@ select
 	[CountryNum],
 	p.[Name] as [CountryRegionName]
 from [dbo].[StateProvince] d join [Person].[CountryRegion] p on d.[CountryRegionCode] = p.[CountryRegionCode];
+select * from @stateProvince;
 
 --c)
 update [dbo].[StateProvince] set [CountryRegionName] = v.[CountryRegionName]
-from [dbo].[StateProvince] join @stateProvince v on [dbo].[StateProvince].[StateProvinceID] = v.[StateProvinceID]
+from [dbo].[StateProvince] join @stateProvince v on [dbo].[StateProvince].[StateProvinceID] = v.[StateProvinceID];
+select * from [dbo].[StateProvince];
 
 --d)
 delete from [dbo].[StateProvince] where [StateProvinceID] not in (
 	select distinct [StateProvinceID] from [Person].[Address]);
+select * from [dbo].[StateProvince];
 
 --e)
 alter table [dbo].[StateProvince] drop column [CountryRegionName];
@@ -49,7 +53,10 @@ select @dropAllConstraints += N'alter table dbo.' + object_name(parent_object_id
 from sys.objects
 where (type_desc like 'check_constraint' or type_desc like 'default_constraint') and parent_object_id = object_id(N'[dbo].[StateProvince]');
 --print @dropAllConstraints;
-execute(@dropAllConstraints)
+execute(@dropAllConstraints);
+select * from [dbo].[StateProvince];
+select * from sys.objects
+where parent_object_id = object_id(N'[dbo].[StateProvince]');
 
 --f)
 drop table [dbo].[StateProvince];
